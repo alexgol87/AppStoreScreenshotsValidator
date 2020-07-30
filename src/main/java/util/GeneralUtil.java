@@ -64,8 +64,7 @@ public class GeneralUtil {
                     wrongNameError(localeFolderId, fileName);
                 } else if (!sizeFromName.equals("2732x2048")) {
                     wrongNameError(localeFolderId, fileName);
-                } else
-                    localeScreenshotRepository.updateSizeList(localeFolderId, numberFromName, sizeFromName, fileName);
+                }
             }
 
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {

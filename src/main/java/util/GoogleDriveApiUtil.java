@@ -24,12 +24,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static util.GeneralUtil.screenshotErrors;
+import static util.GoogleDriveSpider.localeScreenshotRepository;
 
 public class GoogleDriveApiUtil {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final String CREDENTIALS = System.getenv("googledrive_credentials");
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String RANGE_UPDATE_VIDEOERRORS = "AppStore Screens errors!A:A";
+    private static final String RANGE_UPDATE_ERRORS = "AppStore Screens Validation!A:A";
+    private static final String RANGE_UPDATE_SCREENSHOTSTABLE = "AppStore Screens Validation!D1:H200";
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -118,13 +120,17 @@ public class GoogleDriveApiUtil {
             // clear old values
             ClearValuesRequest requestBodyClear = new ClearValuesRequest();
             Sheets.Spreadsheets.Values.Clear request =
-                    service.spreadsheets().values().clear(spreadsheetId, RANGE_UPDATE_VIDEOERRORS, requestBodyClear);
+                    service.spreadsheets().values().clear(spreadsheetId, RANGE_UPDATE_ERRORS, requestBodyClear);
             request.execute();
 
             ValueRange requestBody = new ValueRange();
-            requestBody.setRange(RANGE_UPDATE_VIDEOERRORS);
+            requestBody.setRange(RANGE_UPDATE_ERRORS);
             List<List<Object>> localizationValues = new ArrayList<>();
             AtomicInteger lineIndex = new AtomicInteger();
+
+            localizationValues.add(new ArrayList<>());
+            localizationValues.get(lineIndex.get()).add("Screenshot errors:");
+            lineIndex.getAndIncrement();
 
             screenshotErrors
                     .stream()
@@ -138,7 +144,53 @@ public class GoogleDriveApiUtil {
 
             requestBody.setValues(localizationValues);
 
-            service.spreadsheets().values().update(spreadsheetId, RANGE_UPDATE_VIDEOERRORS, requestBody)
+            service.spreadsheets().values().update(spreadsheetId, RANGE_UPDATE_ERRORS, requestBody)
+                    .setValueInputOption(valueInputOption)
+                    .execute();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clearAndPublishNewTableOnSpreadsheet(Sheets service, String spreadsheetId, String valueInputOption) {
+        try {
+            // clear old values
+            ClearValuesRequest requestBodyClear = new ClearValuesRequest();
+            Sheets.Spreadsheets.Values.Clear request =
+                    service.spreadsheets().values().clear(spreadsheetId, RANGE_UPDATE_SCREENSHOTSTABLE, requestBodyClear);
+            request.execute();
+
+            ValueRange requestBody = new ValueRange();
+            requestBody.setRange(RANGE_UPDATE_SCREENSHOTSTABLE);
+            List<List<Object>> localizationValues = new ArrayList<>();
+            AtomicInteger lineIndex = new AtomicInteger();
+
+            localizationValues.add(new ArrayList<>());
+            localizationValues.get(lineIndex.get()).add("Locale Folder");
+            localizationValues.get(lineIndex.get()).add("2208x1242");
+            localizationValues.get(lineIndex.get()).add("2688x1242");
+            localizationValues.get(lineIndex.get()).add("2732x2048");
+            localizationValues.get(lineIndex.get()).add("2732x2048_ipadPro12");
+            lineIndex.getAndIncrement();
+
+            localeScreenshotRepository.getAll()
+                    .stream()
+                    .forEach(v -> {
+
+                        localizationValues.add(new ArrayList<>());
+                        localizationValues.get(lineIndex.get()).add("=HYPERLINK(\"" + v.getLocaleFolderLink() + "\"; \"" + v.getLocaleFolderName() + "\")");
+                        localizationValues.get(lineIndex.get()).add(v.getSize2208x1242().size());
+                        localizationValues.get(lineIndex.get()).add(v.getSize2688x1242().size());
+                        localizationValues.get(lineIndex.get()).add(v.getSize2732x2048().size());
+                        localizationValues.get(lineIndex.get()).add(v.getSize2732x2048_ipadPro129().size());
+                        lineIndex.getAndIncrement();
+
+                    });
+
+            requestBody.setValues(localizationValues);
+
+            service.spreadsheets().values().update(spreadsheetId, RANGE_UPDATE_SCREENSHOTSTABLE, requestBody)
                     .setValueInputOption(valueInputOption)
                     .execute();
 
