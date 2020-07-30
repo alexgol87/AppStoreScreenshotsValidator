@@ -4,28 +4,16 @@ public class LocaleFolder {
     private String localeFolderId;
     private String localeFolderName;
 
-    public String getlocalefolderid() {
+    public String getLocaleFolderId() {
         return localeFolderId;
-    }
-
-    public void setlocalefolderid(String localefolderid) {
-        this.localeFolderId = localefolderid;
     }
 
     public String getLocaleFolderName() {
         return localeFolderName;
     }
 
-    public void setLocaleFolderName(String localeFolderName) {
-        this.localeFolderName = localeFolderName;
-    }
-
     public String getLocaleFolderLink() {
         return localeFolderLink;
-    }
-
-    public void setLocaleFolderLink(String localeFolderLink) {
-        this.localeFolderLink = localeFolderLink;
     }
 
     public LocaleFolder(String localeFolderID, String localeFolderName, String localeFolderLink) {

@@ -60,9 +60,7 @@ public class GeneralUtil {
 
             // checking ipadPro129
             if (fileNameParsedArray.length > 4) {
-                if (!fileNameParsedArray[4].equals("ipadPro129")) {
-                    wrongNameError(localeFolderId, fileName);
-                } else if (!sizeFromName.equals("2732x2048")) {
+                if (!fileNameParsedArray[4].equals("ipadPro129") || !sizeFromName.equals("2732x2048")) {
                     wrongNameError(localeFolderId, fileName);
                 }
             }
@@ -89,37 +87,31 @@ public class GeneralUtil {
 
     public static void wrongNameError(String localeFolderId, String fileName) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong name\")", localeFolderId, fileName);
-        //System.out.println(error);
         screenshotErrors.add(error);
     }
 
     public static void corruptedFileError(String localeFolderId, String fileName) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s is corrupted\")", localeFolderId, fileName);
-        //System.out.println(error);
         screenshotErrors.add(error);
     }
 
     public static void duplicateNumberError(String localeFolderId, String fileName) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"Screenshot number of file %s is duplicated\")", localeFolderId, fileName);
-        //System.out.println(error);
         screenshotErrors.add(error);
     }
 
     public static void wrongSizeError(String localeFolderId, String fileName, int fileWidth, int fileHeight) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong size: %s\")", localeFolderId, fileName, fileWidth + "x" + fileHeight);
-        //System.out.println(error);
         screenshotErrors.add(error);
     }
 
     public static void russianLetterError(String localeFolderId, String fileName) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s contains the Russian letter 'x'\")", localeFolderId, fileName);
-        //System.out.println(error);
         screenshotErrors.add(error);
     }
 
     public static void wrongFolderError(String localeFolderId, String folderName) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"Folder name %s is not allowed\")", localeFolderId, folderName);
-        //System.out.println(error);
         screenshotErrors.add(error);
     }
 }

@@ -47,7 +47,6 @@ public class GoogleDriveSpider implements Runnable {
             } else {
                 for (File file : files) {
                     localeFolderRepository.add(file.getId(), file.getName(), file.getWebViewLink());
-                    //System.out.println(file.getId() + " " + file.getName().toLowerCase() + " " + file.getWebViewLink());
                 }
             }
             pageToken = result.getNextPageToken();
@@ -59,22 +58,18 @@ public class GoogleDriveSpider implements Runnable {
         for (LocaleFolder localeFolder : localeFolderRepository.getAll()) {
             String pageToken = null;
             while (true) {
-                FileList result = GoogleDriveApiUtil.getFileListFromDriveAPI(service, pageToken, "'" + localeFolder.getlocalefolderid() + "' in parents and mimeType contains 'image/' and trashed = false", "nextPageToken, files(id, name, imageMediaMetadata, lastModifyingUser, parents)");
+                FileList result = GoogleDriveApiUtil.getFileListFromDriveAPI(service, pageToken, "'" + localeFolder.getLocaleFolderId() + "' in parents and mimeType contains 'image/' and trashed = false", "nextPageToken, files(id, name, imageMediaMetadata, lastModifyingUser, parents)");
                 List<File> files = result.getFiles();
                 if (files == null || files.isEmpty()) {
                     System.out.println("No files found.");
                 } else {
-                    //System.out.println("\n" + localeFolder.getLocaleFolderName());
                     for (File file : files) {
                         String fileName = file.getName().replace(".jpg", "");
                         String localeFolderId = file.getParents().get(0);
                         String[] fileNameParsedArray = fileName.split("_");
                         if (!localeScreenshotRepository.ifContainsLocaleScreenshot(localeFolderId))
                             localeScreenshotRepository.add(localeFolderId, localeFolder.getLocaleFolderLink(), localeFolder.getLocaleFolderName());
-                        //localeScreenshotRepository.update(videoNumber + "_" + fileNameParsedArray[2], fileNameParsedArray[0], file.getThumbnailLink());
-                        //System.out.println(fileName);
                         GeneralUtil.checkLocaleScreenshotAndUpdate(file, file.getName(), localeFolderId, fileNameParsedArray);
-                        //System.out.println(fileNameParsedArray[0] + " " + fileNameParsedArray[1] + " " + fileNameParsedArray[2] + " " + fileNameParsedArray[3]);
                     }
                     pageToken = result.getNextPageToken();
                     if (pageToken == null) break;

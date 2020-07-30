@@ -64,14 +64,6 @@ public class InMemoryLocaleScreenshotRepository {
         localeScreenshotMap.put(localeFolderId, tmpLocaleScreenshot);
     }
 
-   /* public void updateScreenshotSet(String localeFolderId, int screenshotNumber) {
-        LocaleScreenshot tmpLocaleScreenshot = getByLocaleFolderId(localeFolderId);
-        Set tmpScreenshotSet = tmpLocaleScreenshot.getScreenshotSet();
-        tmpScreenshotSet.add(screenshotNumber);
-        tmpLocaleScreenshot.setScreenshotSet(tmpScreenshotSet);
-        localeScreenshotMap.put(localeFolderId, tmpLocaleScreenshot);
-    }*/
-
     public boolean ifContainsLocaleScreenshot(String localeFolderId) {
         return localeScreenshotMap.containsKey(localeFolderId);
     }
