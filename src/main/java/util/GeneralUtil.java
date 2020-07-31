@@ -65,6 +65,10 @@ public class GeneralUtil {
                 }
             }
 
+            // checking extension
+            String extension = fileName.substring(fileName.lastIndexOf(".")+1);
+            if (!extension.equals("jpg")) wrongExtensionError(localeFolderId, fileName);
+
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             wrongNameError(localeFolderId, fileName);
         } catch (NullPointerException e) {
@@ -112,6 +116,11 @@ public class GeneralUtil {
 
     public static void wrongFolderError(String localeFolderId, String folderName) {
         String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"Folder name %s is not allowed\")", localeFolderId, folderName);
+        screenshotErrors.add(error);
+    }
+
+    public static void wrongExtensionError(String localeFolderId, String fileName) {
+        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong extension: ." + fileName.substring(fileName.length()-5).split("\\.")[1] + "\")", localeFolderId, fileName);
         screenshotErrors.add(error);
     }
 }
