@@ -64,7 +64,7 @@ public class GoogleDriveSpider implements Runnable {
                     System.out.println("No files found.");
                 } else {
                     for (File file : files) {
-                        String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
+                        String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1);
                         String fileName = file.getName().replace("." + extension, "");
                         String localeFolderId = file.getParents().get(0);
                         String[] fileNameParsedArray = fileName.split("_");

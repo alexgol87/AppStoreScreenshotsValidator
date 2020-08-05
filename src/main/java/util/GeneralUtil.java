@@ -28,10 +28,15 @@ public class GeneralUtil {
         LocaleFolder localeFolder = localeFolderRepository.getByLocaleFolderId(localeFolderId);
 
         try {
-            int numberFromName = Integer.parseInt(fileNameParsedArray[0]);
-            String sizeFromName = fileNameParsedArray[1];
-            String localeFromName = fileNameParsedArray[2];
-            String osFromName = fileNameParsedArray[3];
+            int numberFromName = 0;
+            String sizeFromName = "";
+            String localeFromName = "";
+            String osFromName = "";
+
+            if (fileNameParsedArray.length > 0) numberFromName = Integer.parseInt(fileNameParsedArray[0]);
+            if (fileNameParsedArray.length > 1) sizeFromName = fileNameParsedArray[1];
+            if (fileNameParsedArray.length > 2) localeFromName = fileNameParsedArray[2];
+            if (fileNameParsedArray.length > 3) osFromName = fileNameParsedArray[3];
 
             // checking size and russian letter 'X'
             int fileWidth = file.getImageMediaMetadata().getWidth();
@@ -43,6 +48,7 @@ public class GeneralUtil {
             if (fileWidth != Integer.parseInt(sizeFromName.split("x")[0]) || fileHeight != Integer.parseInt(sizeFromName.split("x")[1])) {
                 wrongSizeError(localeFolderId, fileName, fileWidth, fileHeight);
             }
+
             localeScreenshotRepository.updateSizeList(localeFolderId, numberFromName, sizeFromName, fileName);
 
             // checking allowed folder name
@@ -66,7 +72,7 @@ public class GeneralUtil {
             }
 
             // checking extension
-            String extension = fileName.substring(fileName.lastIndexOf(".")+1);
+            String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
             if (!extension.equals("jpg")) wrongExtensionError(localeFolderId, fileName);
 
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
@@ -120,7 +126,7 @@ public class GeneralUtil {
     }
 
     public static void wrongExtensionError(String localeFolderId, String fileName) {
-        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong extension: ." + fileName.substring(fileName.length()-5).split("\\.")[1] + "\")", localeFolderId, fileName);
+        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong extension: ." + fileName.substring(fileName.length() - 5).split("\\.")[1] + "\")", localeFolderId, fileName);
         screenshotErrors.add(error);
     }
 }
