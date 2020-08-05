@@ -27,7 +27,7 @@ public class MainServlet extends HttpServlet {
             req.setAttribute("lockUpdate", FALSE);
             req.setAttribute("tableReady", TRUE);
             req.setAttribute("execTime", GoogleDriveSpider.execTime);
-            req.setAttribute("errors", GeneralUtil.screenshotErrors.size());
+            req.setAttribute("errors", GoogleDriveSpider.screenshotErrors.size());
         } else if ((thread.getState() == Thread.State.RUNNABLE)) {
             req.setAttribute("lockUpdate", TRUE);
             req.setAttribute("tableReady", FALSE);

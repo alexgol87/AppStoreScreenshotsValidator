@@ -15,6 +15,10 @@ public class InMemoryLocaleFolderRepository {
         localeFolderMap.put(localeFolderId, new LocaleFolder(localeFolderId, localeFolderName, localeFolderLink));
     }
 
+    public void clear() {
+        localeFolderMap.clear();
+    }
+
     public LocaleFolder getByLocaleFolderId(String localeFolderId) {
         return localeFolderMap.get(localeFolderId);
     }

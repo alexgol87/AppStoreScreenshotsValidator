@@ -15,10 +15,10 @@ import static util.GoogleDriveSpider.*;
 
 public class GeneralUtil {
 
-    public static Set<String> screenshotErrors = new LinkedHashSet<>();
+
     // actual list of allowed locales is here: https://analyst.atlassian.net/wiki/spaces/EUS/pages/1662517350/Video+Preview+App+Store+UA
     private static final List<String> foldersAllowedList = new ArrayList<>(Arrays.asList("ar-SA", "ca", "cs", "da", "de-DE", "el", "en-AU", "en-CA", "en-GB", "en-US", "es-ES", "es-MX", "fi", "fr-CA", "fr-FR", "he", "hi", "hr", "hu", "id", "it", "ja", "ko", "ms", "nl-NL", "no", "pl", "pt-BR", "pt-PT", "ro", "ru", "sk", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant"));
-    private static final List<String> localesAllowedList = new ArrayList<>(Arrays.asList("ar-SA", "ca", "cs", "da", "de", "el", "en", "en", "en", "en", "es", "mx", "fi", "fr", "fr", "he", "hi", "hr", "hu", "id", "it", "ja", "ko", "ms", "nl", "no", "pl", "br", "pt", "ro", "ru", "sk", "se", "th", "tr", "uk", "vi", "zns", "zht"));
+    private static final List<String> localesAllowedList = new ArrayList<>(Arrays.asList("ar", "ca", "cs", "da", "de", "el", "en", "en", "en", "en", "es", "mx", "fi", "fr", "fr", "he", "hi", "hr", "hu", "id", "it", "ja", "ko", "ms", "nl", "no", "pl", "br", "pt", "ro", "ru", "sk", "se", "th", "tr", "uk", "vi", "zns", "zht"));
     static Map allowedFolderLocaleDict = IntStream.range(0, Math.min(foldersAllowedList.size(), localesAllowedList.size()))
             .boxed()
             .collect(Collectors.toMap(foldersAllowedList::get, localesAllowedList::get));
@@ -26,6 +26,7 @@ public class GeneralUtil {
     public static void checkLocaleScreenshotAndUpdate(File file, String fileName, String localeFolderId, String[] fileNameParsedArray) {
 
         LocaleFolder localeFolder = localeFolderRepository.getByLocaleFolderId(localeFolderId);
+        String folderName = localeFolder.getLocaleFolderName();
 
         try {
             int numberFromName = 0;
@@ -52,12 +53,16 @@ public class GeneralUtil {
             localeScreenshotRepository.updateSizeList(localeFolderId, numberFromName, sizeFromName, fileName);
 
             // checking allowed folder name
-            if (!allowedFolderLocaleDict.containsKey(localeFolder.getLocaleFolderName()))
-                wrongFolderError(localeFolderId, localeFolder.getLocaleFolderName());
+            if (!allowedFolderLocaleDict.containsKey(folderName))
+                wrongFolderError(localeFolderId, folderName);
 
             // checking allowed locale name
             if (!allowedFolderLocaleDict.containsValue(localeFromName))
                 wrongNameError(localeFolderId, fileName);
+
+            // checking allowed location
+            if (allowedFolderLocaleDict.containsKey(folderName) && !fileName.contains((CharSequence) allowedFolderLocaleDict.get(folderName)))
+                wrongLocationError(localeFolderId, fileName, folderName);
 
             // checking os
             if (!osFromName.equals("ios")) {
@@ -72,7 +77,7 @@ public class GeneralUtil {
             }
 
             // checking extension
-            String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+            String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
             if (!extension.equals("jpg")) wrongExtensionError(localeFolderId, fileName);
 
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
@@ -96,7 +101,7 @@ public class GeneralUtil {
     }
 
     public static void wrongNameError(String localeFolderId, String fileName) {
-        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong name\")", localeFolderId, fileName);
+        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has a wrong name\")", localeFolderId, fileName);
         screenshotErrors.add(error);
     }
 
@@ -111,7 +116,7 @@ public class GeneralUtil {
     }
 
     public static void wrongSizeError(String localeFolderId, String fileName, int fileWidth, int fileHeight) {
-        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong size: %s\")", localeFolderId, fileName, fileWidth + "x" + fileHeight);
+        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has a wrong size: %s\")", localeFolderId, fileName, fileWidth + "x" + fileHeight);
         screenshotErrors.add(error);
     }
 
@@ -125,8 +130,13 @@ public class GeneralUtil {
         screenshotErrors.add(error);
     }
 
+    public static void wrongLocationError(String localeFolderId, String fileName, String folderName) {
+        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s is not allowed in this folder (%s)\")", localeFolderId, fileName, folderName);
+        screenshotErrors.add(error);
+    }
+
     public static void wrongExtensionError(String localeFolderId, String fileName) {
-        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has wrong extension: ." + fileName.substring(fileName.length() - 5).split("\\.")[1] + "\")", localeFolderId, fileName);
+        String error = String.format("=HYPERLINK(\"https://drive.google.com/drive/u/1/folders/%s\";\"File %s has a wrong extension: ." + fileName.substring(fileName.length() - 5).split("\\.")[1] + "\")", localeFolderId, fileName);
         screenshotErrors.add(error);
     }
 }

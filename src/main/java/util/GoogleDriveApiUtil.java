@@ -23,8 +23,8 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static util.GeneralUtil.screenshotErrors;
 import static util.GoogleDriveSpider.localeScreenshotRepository;
+import static util.GoogleDriveSpider.screenshotErrors;
 
 public class GoogleDriveApiUtil {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";

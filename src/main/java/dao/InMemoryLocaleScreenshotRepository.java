@@ -16,6 +16,10 @@ public class InMemoryLocaleScreenshotRepository {
         localeScreenshotMap.put(localeFolderId, new LocaleScreenshot(localeFolderLink, localeFolderName, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()));
     }
 
+    public void clear() {
+        localeScreenshotMap.clear();
+    }
+
     public LocaleScreenshot getByLocaleFolderId(String localeFolderId) {
         return localeScreenshotMap.get(localeFolderId);
     }
@@ -45,7 +49,8 @@ public class InMemoryLocaleScreenshotRepository {
             case "2732x2048":
                 if (fileName.toLowerCase().contains("ipadpro129")) {
                     tmpSize = tmpLocaleScreenshot.getSize2732x2048_ipadPro129();
-                    if (tmpSize.contains(screenshotNumber)) duplicateNumberError(localeFolderId, fileName);
+                    if (tmpSize.contains(screenshotNumber))
+                        duplicateNumberError(localeFolderId, fileName);
                     tmpSize.add(screenshotNumber);
                     tmpLocaleScreenshot.setSize2732x2048_ipadPro129(tmpSize);
                 } else {

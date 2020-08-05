@@ -4,6 +4,7 @@ import util.GoogleDriveSpider;
 import java.time.Instant;
 
 import static util.GeneralUtil.*;
+import static util.GoogleDriveSpider.screenshotErrors;
 
 public class Main {
 

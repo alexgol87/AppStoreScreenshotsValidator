@@ -9,18 +9,24 @@ import dao.InMemoryLocaleScreenshotRepository;
 import model.LocaleFolder;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GoogleDriveSpider implements Runnable {
 
     public static String execTime;
-    final static InMemoryLocaleFolderRepository localeFolderRepository = new InMemoryLocaleFolderRepository();
-    final static InMemoryLocaleScreenshotRepository localeScreenshotRepository = new InMemoryLocaleScreenshotRepository();
+    static final InMemoryLocaleFolderRepository localeFolderRepository = new InMemoryLocaleFolderRepository();
+    static final InMemoryLocaleScreenshotRepository localeScreenshotRepository = new InMemoryLocaleScreenshotRepository();
+    public static final Set<String> screenshotErrors = new LinkedHashSet<>();
 
     public GoogleDriveSpider() {
 
         Instant start = GeneralUtil.startTimeFixing();
 
+        localeFolderRepository.clear();
+        localeScreenshotRepository.clear();
+        screenshotErrors.clear();
         Drive serviceDrive = GoogleDriveApiUtil.buildDriveApiClientService();
         getLocaleFolderIdNameDictionaryFromGoogleDrive(serviceDrive);
         LocaleScreenshotRepositoryFilling(serviceDrive);
@@ -64,13 +70,15 @@ public class GoogleDriveSpider implements Runnable {
                     System.out.println("No files found.");
                 } else {
                     for (File file : files) {
-                        String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-                        String fileName = file.getName().replace("." + extension, "");
-                        String localeFolderId = file.getParents().get(0);
-                        String[] fileNameParsedArray = fileName.split("_");
-                        if (!localeScreenshotRepository.ifContainsLocaleScreenshot(localeFolderId))
-                            localeScreenshotRepository.add(localeFolderId, localeFolder.getLocaleFolderLink(), localeFolder.getLocaleFolderName());
-                        GeneralUtil.checkLocaleScreenshotAndUpdate(file, file.getName(), localeFolderId, fileNameParsedArray);
+                       // if (file.getName().contains("br")) {
+                            String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
+                            String fileName = file.getName().replace("." + extension, "");
+                            String localeFolderId = file.getParents().get(0);
+                            String[] fileNameParsedArray = fileName.split("_");
+                            if (!localeScreenshotRepository.ifContainsLocaleScreenshot(localeFolderId))
+                                localeScreenshotRepository.add(localeFolderId, localeFolder.getLocaleFolderLink(), localeFolder.getLocaleFolderName());
+                            GeneralUtil.checkLocaleScreenshotAndUpdate(file, file.getName(), localeFolderId, fileNameParsedArray);
+                     //   }
                     }
                     pageToken = result.getNextPageToken();
                     if (pageToken == null) break;
