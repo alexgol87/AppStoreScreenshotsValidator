@@ -104,7 +104,7 @@ public class GoogleDriveApiUtil {
                     .setCorpora("drive")
                     .setSupportsTeamDrives(true)
                     .setIncludeTeamDriveItems(true)
-                    .setPageSize(1000)
+                    .setPageSize(100)
                     .setPageToken(pageToken)
                     .setFields(fields)
                     .setOrderBy("name")
