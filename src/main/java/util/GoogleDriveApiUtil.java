@@ -30,8 +30,8 @@ public class GoogleDriveApiUtil {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final String CREDENTIALS = System.getenv("googledrive_credentials");
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String RANGE_UPDATE_ERRORS = "AppStore Screens Validation!A:A";
-    private static final String RANGE_UPDATE_SCREENSHOTSTABLE = "AppStore Screens Validation!D1:H200";
+    private static final String RANGE_UPDATE_ERRORS = "AppStore Screens Validation COEm!A:A";
+    private static final String RANGE_UPDATE_SCREENSHOTSTABLE = "AppStore Screens Validation COEm!D1:H200";
 
     /**
      * Global instance of the scopes required by this quickstart.

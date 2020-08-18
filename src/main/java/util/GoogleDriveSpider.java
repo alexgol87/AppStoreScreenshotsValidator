@@ -32,8 +32,8 @@ public class GoogleDriveSpider implements Runnable {
         LocaleScreenshotRepositoryFilling(serviceDrive);
 
         Sheets serviceSheets = GoogleDriveApiUtil.buildSheetsApiClientService();
-        GoogleDriveApiUtil.clearAndPublishErrorLogOnSpreadsheet(serviceSheets, "1SC92tKYXQDqujUcvZVYMmmNiJp35Q1b22fKg2C7zeQI", "USER_ENTERED");
-        GoogleDriveApiUtil.clearAndPublishNewTableOnSpreadsheet(serviceSheets, "1SC92tKYXQDqujUcvZVYMmmNiJp35Q1b22fKg2C7zeQI", "USER_ENTERED");
+        GoogleDriveApiUtil.clearAndPublishErrorLogOnSpreadsheet(serviceSheets, "1U2axjbWiuIfPhuaLM60C3tdr0uEXaWPkwMMbEqXbxm8", "USER_ENTERED");
+        GoogleDriveApiUtil.clearAndPublishNewTableOnSpreadsheet(serviceSheets, "1U2axjbWiuIfPhuaLM60C3tdr0uEXaWPkwMMbEqXbxm8", "USER_ENTERED");
 
         execTime = GeneralUtil.endTimeFixing(start);
     }
