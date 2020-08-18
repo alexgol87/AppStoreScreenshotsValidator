@@ -30,7 +30,7 @@
     The error list is updated, please, check. Execution time: ${requestScope.execTime}.
 
     <c:if test="${requestScope.errors > 0}">&nbsp;<a
-        href="https://docs.google.com/spreadsheets/d/1SC92tKYXQDqujUcvZVYMmmNiJp35Q1b22fKg2C7zeQI/edit?pli=1#gid=1523179737"
+        href="https://docs.google.com/spreadsheets/d/1U2axjbWiuIfPhuaLM60C3tdr0uEXaWPkwMMbEqXbxm8/edit#gid=1907859962"
         class="awemlink" rel="noopener noreferrer" target="_blank">${requestScope.errors} errors found.
         </a>
     </c:if>
